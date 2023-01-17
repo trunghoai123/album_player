@@ -40,6 +40,8 @@
 }
 
 .main__container {
+  $_cont_width: 1717;
+  $_cont_height: calc(1717 / 8.5832);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -47,8 +49,8 @@
   .main__frame {
     position: relative;
     border: 3px dashed gray;
-    height: 200px; // x 8.5832
-    width: 1717px;
+    width: $_cont_width + px;
+    height: $_cont_height + px; // x 8.5832
     .displayedText {
       border: 3px dashed gray;
       display: inline-block;
