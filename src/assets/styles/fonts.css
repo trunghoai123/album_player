@@ -1,0 +1,471 @@
+@font-face {
+  font-family: 'Adobe Caslon Pro';
+  src: url('../fonts/ACaslonPro-Italic.woff2') format('woff2'),
+    url('../fonts/ACaslonPro-Italic.woff') format('woff');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Adobe Caslon Pro';
+  src: url('../fonts/ACaslonPro-SemiboldItalic.woff2') format('woff2'),
+    url('../fonts/ACaslonPro-SemiboldItalic.woff') format('woff');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Adobe Caslon Pro';
+  src: url('../fonts/ACaslonPro-BoldItalic.woff2') format('woff2'),
+    url('../fonts/ACaslonPro-BoldItalic.woff') format('woff');
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ArnoPro';
+  src: url('../fonts/ArnoPro-BoldItalicCaption.woff2') format('woff2'),
+    url('../fonts/ArnoPro-BoldItalicCaption.woff') format('woff');
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ArnoPro';
+  src: url('../fonts/ArnoPro-ItalicSmText.woff2') format('woff2'),
+    url('../fonts/ArnoPro-ItalicSmText.woff') format('woff');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ArnoPro';
+  src: url('../fonts/ArnoPro-BoldSmText.woff2') format('woff2'),
+    url('../fonts/ArnoPro-BoldSmText.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Adobe Garamond Pro';
+  src: url('../fonts/AGaramondPro-BoldItalic.woff2') format('woff2'),
+    url('../fonts/AGaramondPro-BoldItalic.woff') format('woff');
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ArnoPro';
+  src: url('../fonts/ArnoPro-LightItalicDisplay.woff2') format('woff2'),
+    url('../fonts/ArnoPro-LightItalicDisplay.woff') format('woff');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ArnoPro';
+  src: url('../fonts/ArnoPro-Bold.woff2') format('woff2'),
+    url('../fonts/ArnoPro-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Baby Coffee';
+  src: url('../fonts/BabyCoffee.woff2') format('woff2'),
+    url('../fonts/BabyCoffee.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Bell Gothic Std';
+  src: url('../fonts/BellGothicStd-Bold.woff2') format('woff2'),
+    url('../fonts/BellGothicStd-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Bickham Script Pro';
+  src: url('../fonts/BickhamScriptPro-Semibold.woff2') format('woff2'),
+    url('../fonts/BickhamScriptPro-Semibold.woff') format('woff');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ArnoPro';
+  src: url('../fonts/ArnoPro-SmbdSmText.woff2') format('woff2'),
+    url('../fonts/ArnoPro-SmbdSmText.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Bickham Script Pro';
+  src: url('../fonts/BickhamScriptPro-Bold.woff2') format('woff2'),
+    url('../fonts/BickhamScriptPro-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ArnoPro';
+  src: url('../fonts/ArnoPro-SmbdItalicCaption.woff2') format('woff2'),
+    url('../fonts/ArnoPro-SmbdItalicCaption.woff') format('woff');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ArnoPro';
+  src: url('../fonts/ArnoPro-SmbdItalicSmText.woff2') format('woff2'),
+    url('../fonts/ArnoPro-SmbdItalicSmText.woff') format('woff');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Bickham Script Pro';
+  src: url('../fonts/BickhamScriptPro-Regular.woff2') format('woff2'),
+    url('../fonts/BickhamScriptPro-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Bell Gothic Std';
+  src: url('../fonts/BellGothicStd-Black.woff2') format('woff2'),
+    url('../fonts/BellGothicStd-Black.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Blackoak Std';
+  src: url('../fonts/BlackoakStd.woff2') format('woff2'),
+    url('../fonts/BlackoakStd.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Brush Script Std';
+  src: url('../fonts/BrushScriptStd.woff2') format('woff2'),
+    url('../fonts/BrushScriptStd.woff') format('woff');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DK Jambo';
+  src: url('../fonts/DKJambo.woff2') format('woff2'),
+    url('../fonts/DKJambo.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Eccentric Std';
+  src: url('../fonts/EccentricStd.woff2') format('woff2'),
+    url('../fonts/EccentricStd.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Chaparral Pro';
+  src: url('../fonts/ChaparralPro-BoldIt.woff2') format('woff2'),
+    url('../fonts/ChaparralPro-BoldIt.woff') format('woff');
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Christmas Bell';
+  src: url('../fonts/ChristmasBellPersonalUse.woff2') format('woff2'),
+    url('../fonts/ChristmasBellPersonalUse.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cooper Std';
+  src: url('../fonts/CooperBlackStd.woff2') format('woff2'),
+    url('../fonts/CooperBlackStd.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Giddyup Std';
+  src: url('../fonts/GiddyupStd.woff2') format('woff2'),
+    url('../fonts/GiddyupStd.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CollectionFree';
+  src: url('../fonts/CollectionFreeRegular.woff2') format('woff2'),
+    url('../fonts/CollectionFreeRegular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Chaparral Pro';
+  src: url('../fonts/ChaparralPro-Bold.woff2') format('woff2'),
+    url('../fonts/ChaparralPro-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Charlemagne Std';
+  src: url('../fonts/CharlemagneStd-Bold.woff2') format('woff2'),
+    url('../fonts/CharlemagneStd-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nueva Std Condensed';
+  src: url('../fonts/NuevaStd-CondItalic.woff2') format('woff2'),
+    url('../fonts/NuevaStd-CondItalic.woff') format('woff');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Garamond Premier Pro';
+  src: url('../fonts/GaramondPremrPro-It.woff2') format('woff2'),
+    url('../fonts/GaramondPremrPro-It.woff') format('woff');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Letter Gothic Std';
+  src: url('../fonts/LetterGothicStd-BoldSlanted.woff2') format('woff2'),
+    url('../fonts/LetterGothicStd-BoldSlanted.woff') format('woff');
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lithos Pro';
+  src: url('../fonts/LithosPro-Regular.woff2') format('woff2'),
+    url('../fonts/LithosPro-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Letter Gothic Std';
+  src: url('../fonts/LetterGothicStd-Slanted.woff2') format('woff2'),
+    url('../fonts/LetterGothicStd-Slanted.woff') format('woff');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Mesquite Std';
+  src: url('../fonts/MesquiteStd.woff2') format('woff2'),
+    url('../fonts/MesquiteStd.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Hobo Std';
+  src: url('../fonts/HoboStd.woff2') format('woff2'),
+    url('../fonts/HoboStd.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lithos Pro';
+  src: url('../fonts/LithosPro-Black.woff2') format('woff2'),
+    url('../fonts/LithosPro-Black.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Hiatus';
+  src: url('../fonts/Hiatus.woff2') format('woff2'),
+    url('../fonts/Hiatus.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Garamond Premier Pro';
+  src: url('../fonts/GaramondPremrPro-SmbdIt.woff2') format('woff2'),
+    url('../fonts/GaramondPremrPro-SmbdIt.woff') format('woff');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nueva Std Bold Condensed';
+  src: url('../fonts/NuevaStd-BoldCond.woff2') format('woff2'),
+    url('../fonts/NuevaStd-BoldCond.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Marthin Slant';
+  src: url('../fonts/MarthinSlant.woff2') format('woff2'),
+    url('../fonts/MarthinSlant.woff') format('woff');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Trajan Pro';
+  src: url('../fonts/TrajanPro-Regular.woff2') format('woff2'),
+    url('../fonts/TrajanPro-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tekton Pro';
+  src: url('../fonts/TektonPro-BoldObl.woff2') format('woff2'),
+    url('../fonts/TektonPro-BoldObl.woff') format('woff');
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tekton Pro';
+  src: url('../fonts/TektonPro-Bold.woff2') format('woff2'),
+    url('../fonts/TektonPro-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Stencil Std';
+  src: url('../fonts/StencilStd.woff2') format('woff2'),
+    url('../fonts/StencilStd.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Supernova';
+  src: url('../fonts/SupernovaRegular.woff2') format('woff2'),
+    url('../fonts/SupernovaRegular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Rosewood Std';
+  src: url('../fonts/RosewoodStd-Regular.woff2') format('woff2'),
+    url('../fonts/RosewoodStd-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Star Guard Mid-Case';
+  src: url('../fonts/StarGuardMid-Case.woff2') format('woff2'),
+    url('../fonts/StarGuardMid-Case.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Another Danger';
+  src: url('../fonts/another_danger_-_demo-webfont.woff2') format('woff2'),
+    url('../fonts/another_danger_-_demo-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Candire';
+  src: url('../fonts/candire_font_by_7ntypes-webfont.woff2') format('woff2'),
+    url('../fonts/candire_font_by_7ntypes-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Crayone';
+  src: url('../fonts/crayone-webfont.woff2') format('woff2'),
+    url('../fonts/crayone-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Crimes Times Six';
+  src: url('../fonts/crimes_times_six-webfont.woff2') format('woff2'),
+    url('../fonts/crimes_times_six-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Fleepavlop';
+  src: url('../fonts/fleepavlop_bold-webfont.woff2') format('woff2'),
+    url('../fonts/fleepavlop_bold-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
