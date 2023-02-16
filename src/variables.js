@@ -151,16 +151,90 @@ export const initialFonts = [
     name: 'Trajan Pro',
   },
 ];
+
 export const initialValue = [
+  // {
+  //   id: uuidv4(),
+  //   text: 'Sample Text',
+  //   size: 16,
+  //   font: {
+  //     ...initialFonts[0],
+  //   },
+  //   style: 'normal',
+  //   x: 0,
+  //   y: 0,
+  //   color: {
+  //     name: 'yellow',
+  //     value: '#f7ec1a',
+  //   },
+  // },
+];
+
+export const obstacleSize = [
   {
-    id: uuidv4(),
-    text: 'Type Your Text Here',
-    size: 16,
-    font: {
-      ...initialFonts[0],
-    },
-    style: 'normal',
-    x: 0,
-    y: 0,
+    sizeName: '2x2',
+    width: '20px',
+    height: '20px',
   },
+  {
+    sizeName: '3x3',
+    width: '30px',
+    height: '30px',
+  },
+  {
+    sizeName: '4x4',
+    width: '40px',
+    height: '40px',
+  },
+  {
+    sizeName: '5x5',
+    width: '50px',
+    height: '50px',
+  },
+  {
+    sizeName: '6x6',
+    width: '60px',
+    height: '60px',
+  },
+  {
+    sizeName: '7x7',
+    width: '70px',
+    height: '70px',
+  },
+  {
+    sizeName: '8x8',
+    width: '80px',
+    height: '80px',
+  },
+];
+
+export const initialColors = [
+  {
+    name: 'yellow',
+    value: '#f7ec1a',
+  },
+  {
+    name: 'orange',
+    value: '#f7891a',
+  },
+  {
+    name: 'red',
+    value: '#ff3800',
+  },
+  // {
+  //   name: 'green',
+  //   value: '#3dff00',
+  // },
+  // {
+  //   name: 'blue',
+  //   value: '#00b3ff',
+  // },
+  // {
+  //   name: 'purple',
+  //   value: '#ad00ff',
+  // },
+  // {
+  //   name: 'grey',
+  //   value: '#8f8f8f',
+  // },
 ];
