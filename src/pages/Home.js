@@ -1,5 +1,5 @@
 import { Button } from 'react-bootstrap';
-import { HiVideoCamera, HiTrash } from 'react-icons/hi2';
+import { HiTrash } from 'react-icons/hi2';
 import { TiPlus } from 'react-icons/ti';
 import Draggable from 'react-draggable'; // The default
 import { useEffect, useRef, useState } from 'react';
@@ -22,8 +22,13 @@ const newTextValues = {
   x: 0,
   y: 0,
   color: {
-    name: 'yellow',
-    value: '#f7ec1a',
+    name: 'gold',
+    value: '#FFD700',
+  },
+  dms: {
+    //dimension
+    width: 0,
+    height: 0,
   },
 };
 
@@ -36,11 +41,13 @@ function Home() {
   const selectingElement = useRef(null);
   const selectingElementChild = useRef(null);
   const containerElement = useRef(null);
-
+  // ?width=1200px&height=350px&obs=8x8&obsTop=20&obsLeft=50
   const [params, setParams] = useState({
     width: url.searchParams.get('width'),
     height: url.searchParams.get('height'),
     obstacle: url.searchParams.get('obs'),
+    obsTop: url.searchParams.get('obsTop'),
+    obsLeft: url.searchParams.get('obsLeft'),
     obsSize: { x: 0, y: 0 },
   });
 
@@ -54,7 +61,6 @@ function Home() {
           classes.includes('mdl-js') ||
           classes.includes('cannot__drop--area')
         ) {
-          console.log('hello');
           setSelecting(null);
         }
       }
@@ -100,6 +106,7 @@ function Home() {
                 item.x = checkingRs.contElm.w - checkingRs.childElm.w - 6;
                 item.y = checkingRs.contElm.h - checkingRs.childElm.h - 6;
               }
+              item.dms = getNewDimension();
               setTexts(clonedTexts);
             }
           });
@@ -107,6 +114,7 @@ function Home() {
           clonedTexts.forEach((item) => {
             if (item.id === selecting.id) {
               item.x = obstacleElm.offsetLeft + obstacleElm.offsetWidth;
+              item.dms = getNewDimension();
               setTexts(clonedTexts);
             }
           });
@@ -115,6 +123,58 @@ function Home() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selecting?.font?.id, selecting?.size, selecting?.style, selecting?.text]);
+
+  // useEffect(() => {
+  //   texts.forEach((text) => {
+  //     const currentTag = document.querySelector('.displayedText.selected');
+  //     text.dms.width = currentTag.offsetWidth;
+  //     text.dms.height = currentTag.offsetHeight;
+  //   });
+  // }, [texts]);
+
+  const handleApplyStyle = () => {
+    const clonedTexts = [...texts];
+    const contWidth = containerElement.current.offsetWidth;
+    const contHeight = containerElement.current.offsetHeight;
+    const displayTextTags = document.querySelectorAll('.displayedText');
+    clonedTexts.forEach((text) => {
+      displayTextTags.forEach((tag) => {
+        if (tag.getAttribute('id') === text.id) {
+          text.dms.width = tag.offsetWidth;
+          text.dms.height = tag.offsetHeight;
+          const left = contWidth - (contWidth - text.x);
+          const height = contHeight - (contHeight - text.y);
+          console.log(left);
+          text.leftPercent = (left / contWidth) * 100;
+          text.topPercent = (height / contHeight) * 100;
+        }
+      });
+    });
+
+    // const contLeft = containerElement.current.offsetLeft;
+    // const contTop = containerElement.current.offsetTop;
+    // clonedTexts.forEach((text) => {
+    //   text.leftPercent = contWidth - (contWidth - selectingElement.offsetLeft);
+    //   // text.leftPercent = text.x - contLeft;
+    // });
+    const message = {
+      texts: [...clonedTexts],
+      params: { ...params },
+    };
+
+    // console.log(message);
+    if (message.length > 0) {
+      window.parent.postMessage(message, window.location.origin);
+    }
+  };
+
+  const getNewDimension = () => {
+    const selectingElemChild = selectingElementChild.current;
+    return {
+      width: selectingElemChild.offsetWidth,
+      height: selectingElemChild.offsetHeight,
+    };
+  };
 
   const handleDrag = (e, b) => {
     if (selecting) {
@@ -201,6 +261,7 @@ function Home() {
       clonedTexts.forEach((item) => {
         if (item.id === selecting.id) {
           item.text = e.target.value;
+          item.dms = getNewDimension();
           setSelecting(item);
           setTexts(clonedTexts);
         }
@@ -310,6 +371,7 @@ function Home() {
       clonedTexts.forEach((item) => {
         if (item.id === selecting.id) {
           item.size = newSize;
+          item.dms = getNewDimension();
           setTexts(clonedTexts);
           setSelecting(item);
         }
@@ -324,6 +386,7 @@ function Home() {
       clonedTexts.forEach((item) => {
         if (item.id === selecting.id) {
           item.style = newStyle;
+          item.dms = getNewDimension();
           setTexts(clonedTexts);
           setSelecting(item);
         }
@@ -342,6 +405,7 @@ function Home() {
               item.font = { ...font };
             }
           });
+          item.dms = getNewDimension();
           setTexts(clonedTexts);
           setSelecting(item);
         }
@@ -509,6 +573,7 @@ function Home() {
                             : null
                           : null
                       }
+                      id={item.id}
                       style={{
                         color: item?.color?.value,
                         fontSize: item?.size + 'px',
@@ -529,14 +594,23 @@ function Home() {
             <div
               ref={obstacleElement}
               style={{
-                width: params?.obsSize?.x || '5%',
-                height: params?.obsSize?.y || '35%',
+                width: params?.obsSize?.x || '0px',
+                height: params?.obsSize?.y || '0px',
+                top: params?.obsTop + '%',
+                left: params?.obsLeft + '%',
               }}
               className="cannot__drop--area"
             ></div>
           </div>
         </div>
       </main>
+      <button
+        onClick={handleApplyStyle}
+        id="btn_apply"
+        className="change_style btn_apply"
+      >
+        Apply <i className="fa-regular fa-floppy-disk"></i>
+      </button>
     </div>
   );
 }

@@ -210,31 +210,15 @@ export const obstacleSize = [
 
 export const initialColors = [
   {
-    name: 'yellow',
-    value: '#f7ec1a',
+    name: 'gold',
+    value: '#FFD700',
   },
   {
-    name: 'orange',
-    value: '#f7891a',
+    name: 'white',
+    value: '#FFFFFF',
   },
   {
-    name: 'red',
-    value: '#ff3800',
+    name: 'silver',
+    value: '#C0C0C0',
   },
-  // {
-  //   name: 'green',
-  //   value: '#3dff00',
-  // },
-  // {
-  //   name: 'blue',
-  //   value: '#00b3ff',
-  // },
-  // {
-  //   name: 'purple',
-  //   value: '#ad00ff',
-  // },
-  // {
-  //   name: 'grey',
-  //   value: '#8f8f8f',
-  // },
 ];

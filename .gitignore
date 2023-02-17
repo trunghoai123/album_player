@@ -10,7 +10,11 @@
 
 # production
 /build
-
+# new added
+/18360
+/18360_v2
+/index.html
+/my_library.xml
 # misc
 .DS_Store
 .env.local
