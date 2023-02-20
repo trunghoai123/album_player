@@ -11,6 +11,7 @@
 # production
 /build
 # new added
+/library_backup
 /18360
 /18360_v2
 /index.html

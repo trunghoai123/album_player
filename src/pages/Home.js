@@ -106,7 +106,6 @@ function Home() {
                 item.x = checkingRs.contElm.w - checkingRs.childElm.w - 6;
                 item.y = checkingRs.contElm.h - checkingRs.childElm.h - 6;
               }
-              item.dms = getNewDimension();
               setTexts(clonedTexts);
             }
           });
@@ -114,7 +113,6 @@ function Home() {
           clonedTexts.forEach((item) => {
             if (item.id === selecting.id) {
               item.x = obstacleElm.offsetLeft + obstacleElm.offsetWidth;
-              item.dms = getNewDimension();
               setTexts(clonedTexts);
             }
           });
@@ -144,7 +142,6 @@ function Home() {
           text.dms.height = tag.offsetHeight;
           const left = contWidth - (contWidth - text.x);
           const height = contHeight - (contHeight - text.y);
-          console.log(left);
           text.leftPercent = (left / contWidth) * 100;
           text.topPercent = (height / contHeight) * 100;
         }
@@ -163,18 +160,16 @@ function Home() {
     };
 
     // console.log(message);
-    if (message.length > 0) {
-      window.parent.postMessage(message, window.location.origin);
-    }
+    window.parent.postMessage(message, window.location.origin);
   };
 
-  const getNewDimension = () => {
-    const selectingElemChild = selectingElementChild.current;
-    return {
-      width: selectingElemChild.offsetWidth,
-      height: selectingElemChild.offsetHeight,
-    };
-  };
+  // const getNewDimension = () => {
+  //   const selectingElemChild = selectingElementChild.current;
+  //   return {
+  //     width: selectingElemChild.offsetWidth,
+  //     height: selectingElemChild.offsetHeight,
+  //   };
+  // };
 
   const handleDrag = (e, b) => {
     if (selecting) {
@@ -261,7 +256,7 @@ function Home() {
       clonedTexts.forEach((item) => {
         if (item.id === selecting.id) {
           item.text = e.target.value;
-          item.dms = getNewDimension();
+          // item.dms = getNewDimension();
           setSelecting(item);
           setTexts(clonedTexts);
         }
@@ -363,7 +358,7 @@ function Home() {
 
   const handleChangeSize = (e) => {
     if (selecting) {
-      const newSize = e.target.value;
+      const newSize = Number.parseInt(e.target.value);
       if (newSize === 'e' || newSize < 8 || newSize > 70) {
         return;
       }
@@ -371,7 +366,7 @@ function Home() {
       clonedTexts.forEach((item) => {
         if (item.id === selecting.id) {
           item.size = newSize;
-          item.dms = getNewDimension();
+          // item.dms = getNewDimension();
           setTexts(clonedTexts);
           setSelecting(item);
         }
@@ -386,7 +381,7 @@ function Home() {
       clonedTexts.forEach((item) => {
         if (item.id === selecting.id) {
           item.style = newStyle;
-          item.dms = getNewDimension();
+          // item.dms = getNewDimension();
           setTexts(clonedTexts);
           setSelecting(item);
         }
@@ -405,7 +400,7 @@ function Home() {
               item.font = { ...font };
             }
           });
-          item.dms = getNewDimension();
+          // item.dms = getNewDimension();
           setTexts(clonedTexts);
           setSelecting(item);
         }
