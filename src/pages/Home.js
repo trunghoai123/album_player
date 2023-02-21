@@ -140,6 +140,7 @@ function Home() {
         if (tag.getAttribute('id') === text.id) {
           text.dms.width = tag.offsetWidth;
           text.dms.height = tag.offsetHeight;
+          text.widthInPercent = tag.offsetWidth / contWidth * 100;
           const left = contWidth - (contWidth - text.x);
           const height = contHeight - (contHeight - text.y);
           text.leftPercent = (left / contWidth) * 100;
@@ -586,16 +587,28 @@ function Home() {
                   </Draggable>
                 );
               })}
-            <div
-              ref={obstacleElement}
-              style={{
-                width: params?.obsSize?.x || '0px',
-                height: params?.obsSize?.y || '0px',
-                top: params?.obsTop + '%',
-                left: params?.obsLeft + '%',
-              }}
-              className="cannot__drop--area"
-            ></div>
+            {
+              params?.obsSize?.x !== 0 
+              ? 
+                <div
+                  ref={obstacleElement}
+                  style={{
+                    width: params?.obsSize?.x || '0px',
+                    height: params?.obsSize?.y || '0px',
+                    top: params?.obsTop + '%',
+                    left: params?.obsLeft + '%',
+                  }}
+                  className="cannot__drop--area"
+                ></div> 
+              : 
+                <div
+                  ref={obstacleElement}
+                  style={{
+                    display: 'none'
+                  }}
+                  className="cannot__drop--area"
+                ></div>
+            }
           </div>
         </div>
       </main>
