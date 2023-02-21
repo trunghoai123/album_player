@@ -1,11 +1,9 @@
-import { v4 as uuidv4 } from 'uuid';
-
 export const initialFonts = [
   {
     id: 1,
     name: 'Adobe Caslon Pro',
+    
   },
-
   {
     id: 2,
     name: 'Adobe Garamond Pro',
