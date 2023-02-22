@@ -1,7 +1,7 @@
 import { Button } from 'react-bootstrap';
 import { HiTrash } from 'react-icons/hi2';
 import { TiPlus } from 'react-icons/ti';
-import Draggable from 'react-draggable'; // The default
+import Draggable from 'react-draggable';
 import { useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import {
@@ -10,6 +10,10 @@ import {
   initialValue,
   obstacleSize,
 } from '../variables';
+import JSZip from 'jszip';
+import html2canvas from 'html2canvas';
+import { saveAs } from 'file-saver';
+import PrinterUtil from '../utils/printerUtils';
 
 const newTextValues = {
   id: '',
@@ -33,6 +37,14 @@ const newTextValues = {
 };
 
 function Home() {
+  const [printMode, setPrintMode] = useState(true);
+
+  const [printedModal, showPrintedModal] = useState(false);
+  const [coverImage, setCoverImage] = useState();
+
+  const [printedFileBlob, setPrintedFileBlob] = useState();
+
+  let zip;
   const fullLink = window.location.href;
   const url = new URL(fullLink);
   const [texts, setTexts] = useState(initialValue);
@@ -52,6 +64,14 @@ function Home() {
   });
 
   useEffect(() => {
+    if (printMode) {
+      setTimeout(() => {
+        printEditor();
+      }, 500);
+    }
+  }, [printMode]);
+
+  useEffect(() => {
     const clickEvent = (e) => {
       const classes = e.target.getAttribute('class');
       if (classes) {
@@ -59,7 +79,8 @@ function Home() {
           classes.includes('main__container') ||
           classes.includes('main__frame') ||
           classes.includes('mdl-js') ||
-          classes.includes('cannot__drop--area')
+          classes.includes('cannot__drop--area') ||
+          classes.includes('App')
         ) {
           setSelecting(null);
         }
@@ -122,55 +143,114 @@ function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selecting?.font?.id, selecting?.size, selecting?.style, selecting?.text]);
 
-  // useEffect(() => {
-  //   texts.forEach((text) => {
-  //     const currentTag = document.querySelector('.displayedText.selected');
-  //     text.dms.width = currentTag.offsetWidth;
-  //     text.dms.height = currentTag.offsetHeight;
-  //   });
-  // }, [texts]);
-
-  const handleApplyStyle = () => {
-    const clonedTexts = [...texts];
-    const contWidth = containerElement.current.offsetWidth;
-    const contHeight = containerElement.current.offsetHeight;
-    const displayTextTags = document.querySelectorAll('.displayedText');
-    clonedTexts.forEach((text) => {
-      displayTextTags.forEach((tag) => {
-        if (tag.getAttribute('id') === text.id) {
-          text.dms.width = tag.offsetWidth;
-          text.dms.height = tag.offsetHeight;
-          text.widthInPercent = tag.offsetWidth / contWidth * 100;
-          const left = contWidth - (contWidth - text.x);
-          const height = contHeight - (contHeight - text.y);
-          text.leftPercent = (left / contWidth) * 100;
-          text.topPercent = (height / contHeight) * 100;
-        }
-      });
-    });
-
-    // const contLeft = containerElement.current.offsetLeft;
-    // const contTop = containerElement.current.offsetTop;
-    // clonedTexts.forEach((text) => {
-    //   text.leftPercent = contWidth - (contWidth - selectingElement.offsetLeft);
-    //   // text.leftPercent = text.x - contLeft;
-    // });
-    const message = {
-      texts: [...clonedTexts],
-      params: { ...params },
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      printEditor();
+    }, 300);
+    return () => {
+      clearTimeout(timeout);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    texts,
+    selecting,
+    selecting?.font?.id,
+    selecting?.size,
+    selecting?.style,
+    selecting?.text,
+    selecting?.font?.id,
+    selecting?.color?.id,
+    selecting?.x,
+    selecting?.y,
+  ]);
 
-    // console.log(message);
-    window.parent.postMessage(message, window.location.origin);
+  const printEditor = () => {
+    zip = new JSZip();
+    const editor = document.querySelector('#main_frame');
+    if (editor) {
+      editor.style.backgroundColor = 'transparent';
+      let scaleFactor = ((PrinterUtil.width / 2.54) * 300) / editor.clientWidth;
+      html2canvas(editor, {
+        backgroundColor: null,
+        scale: scaleFactor,
+      }).then(function (canvas) {
+        canvas.getContext('2d').setTransform(1, 0, 0, 1, 0, 0);
+        canvas.toBlob(function (data) {
+          try {
+            setCoverImage(new File([data], '18360.png'));
+            zip.file(`18360/18360.png`, data);
+            zip.generateAsync({ type: 'blob' }).then((content) => {
+              setPrintedFileBlob(content);
+              setPrintMode(false);
+            });
+          } catch (e) {
+            console.log(e);
+          }
+        }, 'image/png');
+      });
+    }
   };
 
-  // const getNewDimension = () => {
-  //   const selectingElemChild = selectingElementChild.current;
-  //   return {
-  //     width: selectingElemChild.offsetWidth,
-  //     height: selectingElemChild.offsetHeight,
+  // const postMessage = () => {
+  //   const message = {
+  //     name: 'uploadFileEditor',
+  //     file: new File([printedFileBlob], '18360.zip'),
+  //     image: coverImage,
   //   };
+  //   // eslint-disable-next-line no-restricted-globals
+  //   parent.postMessage(message, location.origin);
+  //   showPrintedModal(false);
+  //   saveAs(printedFileBlob, '18360.zip');
   // };
+
+  const handleApplyStyle = () => {
+    // const mainFrame = document.querySelector('#main_frame');
+    // if (mainFrame) {
+    //   const activeNode = mainFrame.querySelector('.selected');
+    //   if (activeNode) {
+    //     activeNode.classList.remove('selected');
+    //   }
+    // }
+
+    // use to post message
+    console.log(coverImage);
+    const message = {
+      name: 'uploadFileEditor',
+      file: new File([printedFileBlob], '18360.zip'),
+      image: coverImage,
+      blobImg: printedFileBlob,
+    };
+    // eslint-disable-next-line no-restricted-globals
+    window.parent.postMessage(message, window.location.origin);
+
+    setPrintMode(true);
+    saveAs(printedFileBlob, '18360.zip');
+
+    // ----------------------------
+    // use with verge3d
+    // const clonedTexts = [...texts];
+    // const contWidth = containerElement.current.offsetWidth;
+    // const contHeight = containerElement.current.offsetHeight;
+    // const displayTextTags = document.querySelectorAll('.displayedText');
+    // clonedTexts.forEach((text) => {
+    //   displayTextTags.forEach((tag) => {
+    //     if (tag.getAttribute('id') === text.id) {
+    //       text.dms.width = tag.offsetWidth;
+    //       text.dms.height = tag.offsetHeight;
+    //       text.widthInPercent = tag.offsetWidth / contWidth * 100;
+    //       const left = contWidth - (contWidth - text.x);
+    //       const height = contHeight - (contHeight - text.y);
+    //       text.leftPercent = (left / contWidth) * 100;
+    //       text.topPercent = (height / contHeight) * 100;
+    //     }
+    //   });
+    // });
+    // const message = {
+    //   texts: [...clonedTexts],
+    //   params: { ...params },
+    // };
+    // window.parent.postMessage(message, window.location.origin);
+  };
 
   const handleDrag = (e, b) => {
     if (selecting) {
@@ -413,9 +493,6 @@ function Home() {
     <div className="App">
       <div className="header p-2 border-bottom border-1 d-flex">
         <div className="d-flex main__buttons">
-          {/* <Button variant="outline-primary me-3">
-            <HiVideoCamera size="20" className="me-1" /> View In AR
-          </Button> */}
           <Button
             onClick={(e) => handleAddText(e)}
             variant="outline-success me-3 d-flex"
@@ -542,6 +619,7 @@ function Home() {
             style={{ width: params?.width || '', height: params?.height || '' }}
             ref={containerElement}
             className="main__frame"
+            id="main_frame"
           >
             {texts.length > 0 &&
               texts.map((item) => {
@@ -587,28 +665,26 @@ function Home() {
                   </Draggable>
                 );
               })}
-            {
-              params?.obsSize?.x !== 0 
-              ? 
-                <div
-                  ref={obstacleElement}
-                  style={{
-                    width: params?.obsSize?.x || '0px',
-                    height: params?.obsSize?.y || '0px',
-                    top: params?.obsTop + '%',
-                    left: params?.obsLeft + '%',
-                  }}
-                  className="cannot__drop--area"
-                ></div> 
-              : 
-                <div
-                  ref={obstacleElement}
-                  style={{
-                    display: 'none'
-                  }}
-                  className="cannot__drop--area"
-                ></div>
-            }
+            {params?.obsSize?.x !== 0 ? (
+              <div
+                ref={obstacleElement}
+                style={{
+                  width: params?.obsSize?.x || '0px',
+                  height: params?.obsSize?.y || '0px',
+                  top: params?.obsTop + '%',
+                  left: params?.obsLeft + '%',
+                }}
+                className="cannot__drop--area"
+              ></div>
+            ) : (
+              <div
+                ref={obstacleElement}
+                style={{
+                  display: 'none',
+                }}
+                className="cannot__drop--area"
+              ></div>
+            )}
           </div>
         </div>
       </main>
@@ -617,7 +693,7 @@ function Home() {
         id="btn_apply"
         className="change_style btn_apply"
       >
-        Apply <i className="fa-regular fa-floppy-disk"></i>
+        Print <i className="fa-regular fa-floppy-disk"></i>
       </button>
     </div>
   );
