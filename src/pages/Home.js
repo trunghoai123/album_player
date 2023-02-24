@@ -1,4 +1,3 @@
-import { Button } from 'react-bootstrap';
 import { HiTrash } from 'react-icons/hi2';
 import { TiPlus } from 'react-icons/ti';
 import Draggable from 'react-draggable';
@@ -14,6 +13,12 @@ import JSZip from 'jszip';
 import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
 import PrinterUtil from '../utils/printerUtils';
+import Button from '../components/Button';
+import Input from '../components/Input';
+import Select from '../components/Select';
+import Option from '../components/Option';
+import StyleButton from '../components/StyleButtons';
+import ColorSelection from '../components/ColorSelection';
 
 const newTextValues = {
   id: '',
@@ -39,7 +44,6 @@ const newTextValues = {
 function Home() {
   const [printMode, setPrintMode] = useState(true);
 
-  const [printedModal, showPrintedModal] = useState(false);
   const [coverImage, setCoverImage] = useState();
 
   const [printedFileBlob, setPrintedFileBlob] = useState();
@@ -69,6 +73,7 @@ function Home() {
         printEditor();
       }, 500);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [printMode]);
 
   useEffect(() => {
@@ -87,26 +92,19 @@ function Home() {
       }
     };
     document.addEventListener('mousedown', clickEvent);
-
-    // if (selecting?.id) {
-    //   console.log('added event');
-    //   document.addEventListener('mousedown', clickEvent);
-    //   return () => {
-    //     console.log('event was be removed');
-    //     document.removeEventListener('mousedown', clickEvent);
-    //   };
-    // }
   }, []);
 
   useEffect(() => {
     const clonedParams = { ...params };
-    obstacleSize.forEach((obs) => {
-      if (obs.sizeName === clonedParams.obstacle) {
-        clonedParams.obsSize.x = obs.width;
-        clonedParams.obsSize.y = obs.height;
-        setParams(clonedParams);
-      }
-    });
+    if (params?.obstacle === 'true') {
+    }
+    // obstacleSize.forEach((obs) => {
+    //   if (obs.sizeName === clonedParams.obstacle) {
+    //     clonedParams.obsSize.x = obs.width;
+    //     clonedParams.obsSize.y = obs.height;
+    //     setParams(clonedParams);
+    //   }
+    // });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -191,29 +189,8 @@ function Home() {
     }
   };
 
-  // const postMessage = () => {
-  //   const message = {
-  //     name: 'uploadFileEditor',
-  //     file: new File([printedFileBlob], '18360.zip'),
-  //     image: coverImage,
-  //   };
-  //   // eslint-disable-next-line no-restricted-globals
-  //   parent.postMessage(message, location.origin);
-  //   showPrintedModal(false);
-  //   saveAs(printedFileBlob, '18360.zip');
-  // };
-
   const handleApplyStyle = () => {
-    // const mainFrame = document.querySelector('#main_frame');
-    // if (mainFrame) {
-    //   const activeNode = mainFrame.querySelector('.selected');
-    //   if (activeNode) {
-    //     activeNode.classList.remove('selected');
-    //   }
-    // }
-
     // use to post message
-    console.log(coverImage);
     const message = {
       name: 'uploadFileEditor',
       file: new File([printedFileBlob], '18360.zip'),
@@ -225,31 +202,6 @@ function Home() {
 
     setPrintMode(true);
     saveAs(printedFileBlob, '18360.zip');
-
-    // ----------------------------
-    // use with verge3d
-    // const clonedTexts = [...texts];
-    // const contWidth = containerElement.current.offsetWidth;
-    // const contHeight = containerElement.current.offsetHeight;
-    // const displayTextTags = document.querySelectorAll('.displayedText');
-    // clonedTexts.forEach((text) => {
-    //   displayTextTags.forEach((tag) => {
-    //     if (tag.getAttribute('id') === text.id) {
-    //       text.dms.width = tag.offsetWidth;
-    //       text.dms.height = tag.offsetHeight;
-    //       text.widthInPercent = tag.offsetWidth / contWidth * 100;
-    //       const left = contWidth - (contWidth - text.x);
-    //       const height = contHeight - (contHeight - text.y);
-    //       text.leftPercent = (left / contWidth) * 100;
-    //       text.topPercent = (height / contHeight) * 100;
-    //     }
-    //   });
-    // });
-    // const message = {
-    //   texts: [...clonedTexts],
-    //   params: { ...params },
-    // };
-    // window.parent.postMessage(message, window.location.origin);
   };
 
   const handleDrag = (e, b) => {
@@ -337,7 +289,6 @@ function Home() {
       clonedTexts.forEach((item) => {
         if (item.id === selecting.id) {
           item.text = e.target.value;
-          // item.dms = getNewDimension();
           setSelecting(item);
           setTexts(clonedTexts);
         }
@@ -447,7 +398,6 @@ function Home() {
       clonedTexts.forEach((item) => {
         if (item.id === selecting.id) {
           item.size = newSize;
-          // item.dms = getNewDimension();
           setTexts(clonedTexts);
           setSelecting(item);
         }
@@ -462,7 +412,6 @@ function Home() {
       clonedTexts.forEach((item) => {
         if (item.id === selecting.id) {
           item.style = newStyle;
-          // item.dms = getNewDimension();
           setTexts(clonedTexts);
           setSelecting(item);
         }
@@ -481,7 +430,6 @@ function Home() {
               item.font = { ...font };
             }
           });
-          // item.dms = getNewDimension();
           setTexts(clonedTexts);
           setSelecting(item);
         }
@@ -494,14 +442,14 @@ function Home() {
       <div className="header p-2 border-bottom border-1 d-flex">
         <div className="d-flex main__buttons">
           <Button
-            onClick={(e) => handleAddText(e)}
+            handleClick={(e) => handleAddText(e)}
             variant="outline-success me-3 d-flex"
           >
             <TiPlus size="20" /> Text
           </Button>
           {selecting?.id && (
             <Button
-              onClick={() => handleRemoveText()}
+              handleClick={() => handleRemoveText()}
               variant="outline-danger me-3 d-flex button__remove"
             >
               <HiTrash size="20" /> Inlatura
@@ -514,84 +462,63 @@ function Home() {
               <label htmlFor="typingText" className="me-1">
                 Continut:
               </label>
-              <input
-                autoComplete="off"
-                name="textContent"
-                className="input"
-                id="typingText"
+              <Input
+                type="text"
                 value={selecting.text}
-                onChange={(e) => handleChangeText(e)}
-              />
+                handleChange={(e) => handleChangeText(e)}
+                name="textContent"
+                id="typingText"
+                className="input"
+                autoComplete="off"
+              ></Input>
             </div>
             <div className="me-4 d-flex align-items-center">
               <label htmlFor="textSize" className="me-1">
                 Marime:
               </label>
-              <input
+              <Input
                 type="number"
+                value={selecting.size}
+                onChange={(e) => handleChangeSize(e)}
+                name="size"
+                id="textSize"
+                className="input input__size"
                 min={8}
                 max={40}
-                onChange={(e) => handleChangeSize(e)}
-                value={selecting.size}
-                className="input input__size"
-                id="textSize"
-              />
+              ></Input>
             </div>
             <div className="me-4 d-flex align-items-center">
               <label htmlFor="font" className="me-1">
                 Font:
               </label>
-              <select
+              <Select
                 value={selecting.font.id}
-                onChange={(e) => handleChangeFont(e)}
+                handleChange={(e) => handleChangeFont(e)}
                 className="input"
                 id="font"
               >
                 {initialFonts.map((font) => {
                   return (
-                    <option
+                    <Option
                       key={font?.id}
                       className="font__option"
                       value={font?.id}
                     >
                       {font?.name}
-                    </option>
+                    </Option>
                   );
                 })}
-              </select>
+              </Select>
             </div>
           </div>
         )}
         {selecting?.id && (
           <div className="text__decoration d-flex align-items-center">
             <div className="decoration__styles d-flex align-items-center overflow-hidden">
-              <div
-                data-value="normal"
-                onClick={(e) => handleClickChangeStyle(e)}
-                className={`decoration__styles--tab py-1 ${
-                  selecting?.style === 'normal' ? 'active' : ''
-                }`}
-              >
-                Normal
-              </div>
-              <div
-                data-value="bold"
-                onClick={(e) => handleClickChangeStyle(e)}
-                className={`decoration__styles--tab py-1 ${
-                  selecting?.style === 'bold' ? 'active' : ''
-                }`}
-              >
-                <b>Bold</b>
-              </div>
-              <div
-                data-value="italic"
-                onClick={(e) => handleClickChangeStyle(e)}
-                className={`decoration__styles--tab py-1 ${
-                  selecting?.style === 'italic' ? 'active' : ''
-                }`}
-              >
-                <i>Italic</i>
-              </div>
+              <StyleButton
+                selecting={selecting?.style}
+                handleClick={(e) => handleClickChangeStyle(e)}
+              ></StyleButton>
             </div>
           </div>
         )}
@@ -599,15 +526,13 @@ function Home() {
           <div className="text__colors">
             {initialColors.map((item) => {
               return (
-                <div
+                <ColorSelection
                   key={item?.value}
                   data-value={item?.name}
-                  onClick={(e) => handleChangeColor(e)}
-                  style={{ backgroundColor: item.value }}
-                  className={`text__colors--item ${
-                    selecting?.color?.name === item.name ? 'active' : ''
-                  }`}
-                ></div>
+                  handleClick={(e) => handleChangeColor(e)}
+                  colorValue={item.value}
+                  isActive={selecting?.color?.name === item.name}
+                ></ColorSelection>
               );
             })}
           </div>
@@ -665,12 +590,12 @@ function Home() {
                   </Draggable>
                 );
               })}
-            {params?.obsSize?.x !== 0 ? (
+            {params?.obstacle ? (
               <div
                 ref={obstacleElement}
                 style={{
-                  width: params?.obsSize?.x || '0px',
-                  height: params?.obsSize?.y || '0px',
+                  height: '33.33334%',
+                  aspectRatio: 1,
                   top: params?.obsTop + '%',
                   left: params?.obsLeft + '%',
                 }}
