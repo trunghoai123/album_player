@@ -3,12 +3,7 @@ import { TiPlus } from 'react-icons/ti';
 import Draggable from 'react-draggable';
 import { useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import {
-  initialColors,
-  initialFonts,
-  initialValue,
-  obstacleSize,
-} from '../variables';
+import { initialColors, initialFonts, initialValue } from '../variables';
 import JSZip from 'jszip';
 import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
@@ -64,6 +59,8 @@ function Home() {
     obstacle: url.searchParams.get('obs'),
     obsTop: url.searchParams.get('obsTop'),
     obsLeft: url.searchParams.get('obsLeft'),
+    aspectRatio: url.searchParams.get('apr'),
+    rightObstacle: url.searchParams.get('robs'),
     obsSize: { x: 0, y: 0 },
   });
 
@@ -94,19 +91,18 @@ function Home() {
     document.addEventListener('mousedown', clickEvent);
   }, []);
 
-  useEffect(() => {
-    const clonedParams = { ...params };
-    if (params?.obstacle === 'true') {
-    }
-    // obstacleSize.forEach((obs) => {
-    //   if (obs.sizeName === clonedParams.obstacle) {
-    //     clonedParams.obsSize.x = obs.width;
-    //     clonedParams.obsSize.y = obs.height;
-    //     setParams(clonedParams);
-    //   }
-    // });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   const clonedParams = { ...params };
+  //   if (params?.obstacle === 'true') {
+  //   }
+  //   obstacleSize.forEach((obs) => {
+  //     if (obs.sizeName === clonedParams.obstacle) {
+  //       clonedParams.obsSize.x = obs.width;
+  //       clonedParams.obsSize.y = obs.height;
+  //       setParams(clonedParams);
+  //     }
+  //   });
+  // }, []);
 
   useEffect(() => {
     if (selecting) {
@@ -114,7 +110,16 @@ function Home() {
         const checkingRs = checkIsOutOfContainer();
         const obstacleElm = obstacleElement.current;
         const clonedTexts = [...texts];
-        if (checkingRs.rs !== 0) {
+        if (checkIsCanPlace() === false && params?.rightObstacle) {
+          clonedTexts.forEach((item) => {
+            if (item.id === selecting.id) {
+              item.x =
+                obstacleElm.offsetLeft -
+                selectingElementChild.current.offsetWidth;
+            }
+          });
+          setTexts(clonedTexts);
+        } else if (checkingRs.rs !== 0) {
           clonedTexts.forEach((item) => {
             if (item.id === selecting.id) {
               if (checkingRs.rs === 1) {
@@ -254,7 +259,13 @@ function Home() {
       const clonedTexts = [...texts];
       clonedTexts.forEach((item) => {
         if (item.id === selecting.id) {
-          item.x = obstacleElm.offsetLeft + obstacleElm.offsetWidth;
+          if (params?.rightObstacle) {
+            item.x =
+              obstacleElm.offsetLeft -
+              selectingElementChild.current.offsetWidth;
+          } else {
+            item.x = obstacleElm.offsetLeft + obstacleElm.offsetWidth;
+          }
           setTexts(clonedTexts);
         }
       });
@@ -264,8 +275,8 @@ function Home() {
   const checkPossibleToDrop = (dragElm, obstacleElm) => {
     const containerElm = containerElement.current;
     if (
-      containerElm.offsetWidth - (obstacleElm.x + obstacleElm.w) <
-      dragElm.w
+      containerElm.offsetWidth - (obstacleElm.x + obstacleElm.w) < dragElm.w &&
+      !params?.rightObstacle
     ) {
       return true;
     } else if (
@@ -541,7 +552,11 @@ function Home() {
       <main>
         <div className="main__container">
           <div
-            style={{ width: params?.width || '', height: params?.height || '' }}
+            // style={{ width: params?.width || '80%', height: params?.height || '' }}
+            style={{
+              width: params?.width || '80%',
+              aspectRatio: params?.aspectRatio || '17.29/2.5',
+            }}
             ref={containerElement}
             className="main__frame"
             id="main_frame"
@@ -591,16 +606,29 @@ function Home() {
                 );
               })}
             {params?.obstacle ? (
-              <div
-                ref={obstacleElement}
-                style={{
-                  height: '33.33334%',
-                  aspectRatio: 1,
-                  top: params?.obsTop + '%',
-                  left: params?.obsLeft + '%',
-                }}
-                className="cannot__drop--area"
-              ></div>
+              params?.rightObstacle ? (
+                <div
+                  ref={obstacleElement}
+                  style={{
+                    height: '100%',
+                    width: '9%',
+                    top: '0%',
+                    right: '0%',
+                  }}
+                  className="cannot__drop--area"
+                ></div>
+              ) : (
+                <div
+                  ref={obstacleElement}
+                  style={{
+                    height: '33.33334%',
+                    aspectRatio: 1,
+                    top: params?.obsTop + '%',
+                    left: params?.obsLeft + '%',
+                  }}
+                  className="cannot__drop--area"
+                ></div>
+              )
             ) : (
               <div
                 ref={obstacleElement}

@@ -83,11 +83,13 @@
   margin-top: 100px;
   .main__frame {
     // background-color: rgb(17, 17, 17);
-    width: 80%;
-    aspect-ratio: 24.5/4.5;
+    // width: 80%;
+    // aspect-ratio: 24.5/4.5;
+    // clip-path: polygon(0% 0%, 100% 0%, 100% 20%, 87% 100%, 0% 100%);
     position: relative;
     outline: 2px dashed gray;
     .displayedText {
+      z-index: 1;
       position: absolute;
       border: 2px dashed transparent;
       display: inline-block;
@@ -100,10 +102,10 @@
     }
     .cannot__drop--area {
       position: absolute;
-      top: 50%;
-      left: 10%;
+      // top: 50%;
+      // left: 10%;
       outline: 2px dashed rgb(255, 0, 0);
-      aspect-ratio: 1;
+      // aspect-ratio: 1;
     }
   }
 }
