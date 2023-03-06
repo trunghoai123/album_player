@@ -54,13 +54,16 @@ function Home() {
   const containerElement = useRef(null);
   // ?width=1200px&height=350px&obs=8x8&obsTop=20&obsLeft=50
   const [params, setParams] = useState({
+    size: url.searchParams.get('size'),
     width: url.searchParams.get('width'),
     height: url.searchParams.get('height'),
-    obstacle: url.searchParams.get('obs'),
-    obsTop: url.searchParams.get('obsTop'),
-    obsLeft: url.searchParams.get('obsLeft'),
-    aspectRatio: url.searchParams.get('apr'),
-    rightObstacle: url.searchParams.get('robs'),
+    obstacle: true,
+    obsTop: '55.5555',
+    obsLeft: '22.499',
+    aspectRatio:
+      url.searchParams.get('size') === '30x30' ? '24.5/4.5' : '19/2.5',
+    // aspectRatio: url.searchParams.get('apr'),
+    rightObstacle: url.searchParams.get('size') !== '30x30',
     obsSize: { x: 0, y: 0 },
   });
 
@@ -123,12 +126,12 @@ function Home() {
           clonedTexts.forEach((item) => {
             if (item.id === selecting.id) {
               if (checkingRs.rs === 1) {
-                item.x = checkingRs.contElm.w - checkingRs.childElm.w - 6; // border width of each element = 3px
+                item.x = checkingRs.contElm.w - checkingRs.childElm.w; // border width of each element = 3px
               } else if (checkingRs.rs === 2) {
-                item.y = checkingRs.contElm.h - checkingRs.childElm.h - 6;
+                item.y = checkingRs.contElm.h - checkingRs.childElm.h;
               } else {
-                item.x = checkingRs.contElm.w - checkingRs.childElm.w - 6;
-                item.y = checkingRs.contElm.h - checkingRs.childElm.h - 6;
+                item.x = checkingRs.contElm.w - checkingRs.childElm.w;
+                item.y = checkingRs.contElm.h - checkingRs.childElm.h;
               }
               setTexts(clonedTexts);
             }
@@ -324,15 +327,15 @@ function Home() {
       h: containerElm.offsetHeight,
     };
     if (
-      childElm.x + childElm.w >= contElm.w - 6 &&
-      childElm.y + childElm.h >= contElm.h - 6
+      childElm.x + childElm.w >= contElm.w &&
+      childElm.y + childElm.h >= contElm.h
     ) {
       return {
         rs: 3,
         childElm,
         contElm,
       };
-    } else if (childElm.x + childElm.w >= contElm.w - 6) {
+    } else if (childElm.x + childElm.w >= contElm.w) {
       return {
         // rs = 1, child appear on the right of parent
         // rs = 2, child appear on the bottom of parent
@@ -341,7 +344,7 @@ function Home() {
         childElm,
         contElm,
       };
-    } else if (childElm.y + childElm.h >= contElm.h - 6) {
+    } else if (childElm.y + childElm.h >= contElm.h) {
       return {
         rs: 2,
         childElm,
@@ -429,7 +432,6 @@ function Home() {
       });
     }
   };
-
   const handleChangeFont = (e) => {
     if (selecting) {
       const newFontId = Number.parseInt(e.currentTarget.value);
@@ -448,6 +450,11 @@ function Home() {
     }
   };
 
+  // !params ? (
+  //   <div className="loading_slt">
+  //     <div className="loading_text">Loading...</div>
+  //   </div>
+  // ) :
   return (
     <div className="App">
       <div className="header p-2 border-bottom border-1 d-flex">
