@@ -37,7 +37,7 @@ const newTextValues = {
 };
 
 function Home() {
-  const [printMode, setPrintMode] = useState(true);
+  const [printMode, setPrintMode] = useState(false);
 
   const [coverImage, setCoverImage] = useState();
 
@@ -57,6 +57,7 @@ function Home() {
     size: url.searchParams.get('size'),
     width: url.searchParams.get('width'),
     height: url.searchParams.get('height'),
+    color: url.searchParams.get('color') || 'white',
     obstacle: true,
     obsTop: '55.5555',
     obsLeft: '22.499',
@@ -67,14 +68,14 @@ function Home() {
     obsSize: { x: 0, y: 0 },
   });
 
-  useEffect(() => {
-    if (printMode) {
-      setTimeout(() => {
-        printEditor();
-      }, 500);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [printMode]);
+  // useEffect(() => {
+  //   if (printMode) {
+  //     setTimeout(() => {
+  //       printEditor();
+  //     }, 300);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [printMode]);
 
   useEffect(() => {
     const clickEvent = (e) => {
@@ -148,33 +149,32 @@ function Home() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selecting?.font?.id, selecting?.size, selecting?.style, selecting?.text]);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      printEditor();
-    }, 300);
-    return () => {
-      clearTimeout(timeout);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    texts,
-    selecting,
-    selecting?.font?.id,
-    selecting?.size,
-    selecting?.style,
-    selecting?.text,
-    selecting?.font?.id,
-    selecting?.color?.id,
-    selecting?.x,
-    selecting?.y,
-  ]);
-
+  // before add background
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     printEditor();
+  //   }, 300);
+  //   return () => {
+  //     clearTimeout(timeout);
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [
+  //   texts,
+  //   selecting,
+  //   selecting?.font?.id,
+  //   selecting?.size,
+  //   selecting?.style,
+  //   selecting?.text,
+  //   selecting?.font?.id,
+  //   selecting?.color?.id,
+  //   selecting?.x,
+  //   selecting?.y,
+  // ]);
   const printEditor = () => {
     zip = new JSZip();
     const editor = document.querySelector('#main_frame');
     if (editor) {
-      editor.style.backgroundColor = 'transparent';
+      // editor.style.backgroundColor = 'transparent';
       let scaleFactor = ((PrinterUtil.width / 2.54) * 300) / editor.clientWidth;
       html2canvas(editor, {
         backgroundColor: null,
@@ -186,8 +186,14 @@ function Home() {
             setCoverImage(new File([data], '18360.png'));
             zip.file(`18360/18360.png`, data);
             zip.generateAsync({ type: 'blob' }).then((content) => {
-              setPrintedFileBlob(content);
+              setPrintedFileBlob(() => {
+                saveAs(content, '18360.zip');
+                return content;
+              });
               setPrintMode(false);
+              // setTimeout(() => {
+              //   saveAs(printedFileBlob, '18360.zip');
+              // }, 2000);
             });
           } catch (e) {
             console.log(e);
@@ -196,6 +202,17 @@ function Home() {
       });
     }
   };
+  useEffect(() => {
+    console.log(printMode);
+    const editor = document.querySelector('.second__container');
+    if (printMode) {
+      editor.classList.add('printing');
+      printEditor();
+    } else {
+      editor.classList.remove('printing');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [printMode]);
 
   const handleApplyStyle = () => {
     // use to post message
@@ -209,7 +226,9 @@ function Home() {
     window.parent.postMessage(message, window.location.origin);
 
     setPrintMode(true);
-    saveAs(printedFileBlob, '18360.zip');
+    // setTimeout(() => {
+    //   saveAs(printedFileBlob, '18360.zip');
+    // }, 2000);
   };
 
   const handleDrag = (e, b) => {
@@ -223,22 +242,6 @@ function Home() {
         }
       });
     }
-  };
-
-  const handleChangeColor = (e) => {
-    const newColor = e.currentTarget.getAttribute('data-value');
-    const clonedTexts = [...texts];
-    clonedTexts.forEach((item) => {
-      if (item.id === selecting.id) {
-        initialColors.forEach((color) => {
-          if (newColor === color.name) {
-            item.color = { ...color };
-          }
-        });
-        setTexts(clonedTexts);
-        setSelecting(item);
-      }
-    });
   };
 
   const handleStop = (e, n) => {
@@ -395,8 +398,14 @@ function Home() {
   };
 
   const handleAddText = (e) => {
+    let curColor = {};
     const clonedTexts = [...texts];
-    const newText = { ...newTextValues, id: uuidv4() };
+    initialColors.forEach((color) => {
+      if (color?.name === params?.color) {
+        curColor = { ...color };
+      }
+    });
+    const newText = { ...newTextValues, id: uuidv4(), color: { ...curColor } };
     clonedTexts.push(newText);
     setTexts(clonedTexts);
     setSelecting(newText);
@@ -540,111 +549,104 @@ function Home() {
             </div>
           </div>
         )}
-        {selecting?.id && (
-          <div className="text__colors">
-            {initialColors.map((item) => {
-              return (
-                <ColorSelection
-                  key={item?.value}
-                  data-value={item?.name}
-                  handleClick={(e) => handleChangeColor(e)}
-                  colorValue={item.value}
-                  isActive={selecting?.color?.name === item.name}
-                ></ColorSelection>
-              );
-            })}
-          </div>
-        )}
       </div>
       <main>
-        <div className="main__container">
-          <div
-            // style={{ width: params?.width || '80%', height: params?.height || '' }}
-            style={{
-              width: params?.width || '80%',
-              aspectRatio: params?.aspectRatio || '17.29/2.5',
-            }}
-            ref={containerElement}
-            className="main__frame"
-            id="main_frame"
-          >
-            {texts.length > 0 &&
-              texts.map((item) => {
-                return (
-                  <Draggable
-                    position={{ x: item?.x, y: item?.y }}
-                    key={item?.id}
-                    onDrag={handleDrag}
-                    onStop={handleStop}
-                    bounds="parent"
-                    onMouseDown={() => handleMouseDown(item)}
-                    ref={
-                      selecting
-                        ? item.id === selecting.id
-                          ? selectingElement
-                          : null
-                        : null
-                    }
-                  >
-                    <div
-                      ref={
-                        selecting
-                          ? item.id === selecting.id
-                            ? selectingElementChild
-                            : null
-                          : null
-                      }
-                      id={item.id}
-                      style={{
-                        color: item?.color?.value,
-                        fontSize: item?.size + 'px',
-                        fontStyle:
-                          item?.style === 'italic' ? 'italic' : 'normal',
-                        fontWeight: item?.style === 'bold' ? 'bold' : 'normal',
-                        fontFamily: item?.font?.name,
-                      }}
-                      className={`displayedText ${
-                        item?.id === selecting?.id ? 'selected' : ''
-                      }`}
-                    >
-                      {item?.text}
-                    </div>
-                  </Draggable>
-                );
-              })}
-            {params?.obstacle ? (
-              params?.rightObstacle ? (
-                <div
-                  ref={obstacleElement}
-                  style={{
-                    height: '100%',
-                    width: '9%',
-                    top: '0%',
-                    right: '0%',
-                  }}
-                  className="cannot__drop--area"
-                ></div>
-              ) : (
-                <div
-                  ref={obstacleElement}
-                  style={{
-                    height: '33.33334%',
-                    aspectRatio: 1,
-                    top: params?.obsTop + '%',
-                    left: params?.obsLeft + '%',
-                  }}
-                  className="cannot__drop--area"
-                ></div>
-              )
-            ) : (
+        <div className="first__container">
+          <div className="second__container">
+            <div className="main__container">
+              <div className="screen__container">
+                <div className="screen"></div>
+              </div>
               <div
-                ref={obstacleElement}
+                // style={{ width: params?.width || '80%', height: params?.height || '' }}
                 style={{
-                  display: 'none',
+                  width: params?.width || '100%',
+                  aspectRatio: params?.aspectRatio || '17.29/2.5',
                 }}
-                className="cannot__drop--area"
-              ></div>
-            )}
+                ref={containerElement}
+                className="main__frame"
+                id="main_frame"
+              >
+                {texts.length > 0 &&
+                  texts.map((item) => {
+                    return (
+                      <Draggable
+                        position={{ x: item?.x, y: item?.y }}
+                        key={item?.id}
+                        onDrag={handleDrag}
+                        onStop={handleStop}
+                        bounds="parent"
+                        onMouseDown={() => handleMouseDown(item)}
+                        ref={
+                          selecting
+                            ? item.id === selecting.id
+                              ? selectingElement
+                              : null
+                            : null
+                        }
+                      >
+                        <div
+                          ref={
+                            selecting
+                              ? item.id === selecting.id
+                                ? selectingElementChild
+                                : null
+                              : null
+                          }
+                          id={item.id}
+                          style={{
+                            color: item?.color?.value,
+                            fontSize: item?.size + 'px',
+                            fontStyle:
+                              item?.style === 'italic' ? 'italic' : 'normal',
+                            fontWeight:
+                              item?.style === 'bold' ? 'bold' : 'normal',
+                            fontFamily: item?.font?.name,
+                          }}
+                          className={`displayedText ${
+                            item?.id === selecting?.id ? 'selected' : ''
+                          }`}
+                        >
+                          {item?.text}
+                        </div>
+                      </Draggable>
+                    );
+                  })}
+                {params?.obstacle ? (
+                  params?.rightObstacle ? (
+                    <div
+                      ref={obstacleElement}
+                      style={{
+                        height: '100%',
+                        width: '9%',
+                        top: '0%',
+                        right: '0%',
+                      }}
+                      className="cannot__drop--area"
+                    ></div>
+                  ) : (
+                    <div
+                      ref={obstacleElement}
+                      style={{
+                        height: '33.33334%',
+                        aspectRatio: 1,
+                        top: params?.obsTop + '%',
+                        left: params?.obsLeft + '%',
+                      }}
+                      className="cannot__drop--area"
+                    ></div>
+                  )
+                ) : (
+                  <div
+                    ref={obstacleElement}
+                    style={{
+                      display: 'none',
+                    }}
+                    className="cannot__drop--area"
+                  ></div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </main>
