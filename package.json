@@ -2,7 +2,7 @@
   "name": "album_player",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://localhost/album/wp-content/uploads/verge3d/digital-editor/build/",
+  "homepage": "http://localhost/wp-content/uploads/verge3d/digital-editor/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

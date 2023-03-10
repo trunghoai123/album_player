@@ -14,6 +14,8 @@ import Select from '../components/Select';
 import Option from '../components/Option';
 import StyleButton from '../components/StyleButtons';
 import ColorSelection from '../components/ColorSelection';
+import BG from '../assets/images/bg.svg';
+import LoudSpk from '../assets/images/loudseaker.png';
 
 const newTextValues = {
   id: '',
@@ -30,7 +32,6 @@ const newTextValues = {
     value: '#FFD700',
   },
   dms: {
-    //dimension
     width: 0,
     height: 0,
   },
@@ -38,12 +39,9 @@ const newTextValues = {
 
 function Home() {
   const [printMode, setPrintMode] = useState(false);
-
-  const [coverImage, setCoverImage] = useState();
-
-  const [printedFileBlob, setPrintedFileBlob] = useState();
-
+  const [image, setImage] = useState();
   let zip;
+
   const fullLink = window.location.href;
   const url = new URL(fullLink);
   const [texts, setTexts] = useState(initialValue);
@@ -52,7 +50,6 @@ function Home() {
   const selectingElement = useRef(null);
   const selectingElementChild = useRef(null);
   const containerElement = useRef(null);
-  // ?width=1200px&height=350px&obs=8x8&obsTop=20&obsLeft=50
   const [params, setParams] = useState({
     size: url.searchParams.get('size'),
     width: url.searchParams.get('width'),
@@ -67,16 +64,6 @@ function Home() {
     rightObstacle: url.searchParams.get('size') !== '30x30',
     obsSize: { x: 0, y: 0 },
   });
-
-  // useEffect(() => {
-  //   if (printMode) {
-  //     setTimeout(() => {
-  //       printEditor();
-  //     }, 300);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [printMode]);
-
   useEffect(() => {
     const clickEvent = (e) => {
       const classes = e.target.getAttribute('class');
@@ -94,19 +81,6 @@ function Home() {
     };
     document.addEventListener('mousedown', clickEvent);
   }, []);
-
-  // useEffect(() => {
-  //   const clonedParams = { ...params };
-  //   if (params?.obstacle === 'true') {
-  //   }
-  //   obstacleSize.forEach((obs) => {
-  //     if (obs.sizeName === clonedParams.obstacle) {
-  //       clonedParams.obsSize.x = obs.width;
-  //       clonedParams.obsSize.y = obs.height;
-  //       setParams(clonedParams);
-  //     }
-  //   });
-  // }, []);
 
   useEffect(() => {
     if (selecting) {
@@ -149,27 +123,6 @@ function Home() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selecting?.font?.id, selecting?.size, selecting?.style, selecting?.text]);
-  // before add background
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-  //     printEditor();
-  //   }, 300);
-  //   return () => {
-  //     clearTimeout(timeout);
-  //   };
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [
-  //   texts,
-  //   selecting,
-  //   selecting?.font?.id,
-  //   selecting?.size,
-  //   selecting?.style,
-  //   selecting?.text,
-  //   selecting?.font?.id,
-  //   selecting?.color?.id,
-  //   selecting?.x,
-  //   selecting?.y,
-  // ]);
   const printEditor = () => {
     zip = new JSZip();
     const editor = document.querySelector('#main_frame');
@@ -183,17 +136,21 @@ function Home() {
         canvas.getContext('2d').setTransform(1, 0, 0, 1, 0, 0);
         canvas.toBlob(function (data) {
           try {
-            setCoverImage(new File([data], '18360.png'));
-            zip.file(`18360/18360.png`, data);
+            zip.file(`digital.png`, data);
             zip.generateAsync({ type: 'blob' }).then((content) => {
-              setPrintedFileBlob(() => {
-                saveAs(content, '18360.zip');
-                return content;
-              });
+              const message = {
+                name: 'uploadFileEditor',
+                file: new File([content], 'digital.zip'),
+                image: new File([data], 'digital.png'),
+                // image: data,
+                type: 'digital',
+              };
+              // eslint-disable-next-line no-restricted-globals
+              window.parent.postMessage(message, window.location.origin);
               setPrintMode(false);
-              // setTimeout(() => {
-              //   saveAs(printedFileBlob, '18360.zip');
-              // }, 2000);
+              // saveAs(content, 'test.zip');
+              obstacleElement?.current?.classList.remove('none')
+              return content;
             });
           } catch (e) {
             console.log(e);
@@ -203,32 +160,18 @@ function Home() {
     }
   };
   useEffect(() => {
-    console.log(printMode);
-    const editor = document.querySelector('.second__container');
     if (printMode) {
-      editor.classList.add('printing');
+      if(obstacleElement){
+        obstacleElement?.current?.classList.add('none')
+      }
       printEditor();
     } else {
-      editor.classList.remove('printing');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [printMode]);
 
   const handleApplyStyle = () => {
-    // use to post message
-    const message = {
-      name: 'uploadFileEditor',
-      file: new File([printedFileBlob], '18360.zip'),
-      image: coverImage,
-      blobImg: printedFileBlob,
-    };
-    // eslint-disable-next-line no-restricted-globals
-    window.parent.postMessage(message, window.location.origin);
-
     setPrintMode(true);
-    // setTimeout(() => {
-    //   saveAs(printedFileBlob, '18360.zip');
-    // }, 2000);
   };
 
   const handleDrag = (e, b) => {
@@ -459,11 +402,10 @@ function Home() {
     }
   };
 
-  // !params ? (
-  //   <div className="loading_slt">
-  //     <div className="loading_text">Loading...</div>
-  //   </div>
-  // ) :
+  const handelCloseFrame = () => {
+    window.parent.document.querySelector('#editor')?.remove();
+  };
+
   return (
     <div className="App">
       <div className="header p-2 border-bottom border-1 d-flex">
@@ -554,11 +496,17 @@ function Home() {
         <div className="first__container">
           <div className="second__container">
             <div className="main__container">
-              <div className="screen__container">
+              <div
+                style={{
+                  padding: params?.rightObstacle
+                    ? '9% 9% 0px 12%'
+                    : '7% 7% 0px 7%',
+                }}
+                className="screen__container"
+              >
                 <div className="screen"></div>
               </div>
               <div
-                // style={{ width: params?.width || '80%', height: params?.height || '' }}
                 style={{
                   width: params?.width || '100%',
                   aspectRatio: params?.aspectRatio || '17.29/2.5',
@@ -623,7 +571,7 @@ function Home() {
                         right: '0%',
                       }}
                       className="cannot__drop--area"
-                    ></div>
+                    ><img src={BG} alt='a'/></div>
                   ) : (
                     <div
                       ref={obstacleElement}
@@ -634,7 +582,8 @@ function Home() {
                         left: params?.obsLeft + '%',
                       }}
                       className="cannot__drop--area"
-                    ></div>
+                    ><img src={LoudSpk} alt='a'/>
+                    </div>
                   )
                 ) : (
                   <div
@@ -655,8 +604,11 @@ function Home() {
         id="btn_apply"
         className="change_style btn_apply"
       >
-        Print <i className="fa-regular fa-floppy-disk"></i>
+        <i className="fa-solid fa-print"></i> Salveaza
       </button>
+      <div className="btn_close" onClick={handelCloseFrame}>
+        <i className="fa-solid fa-xmark"></i>
+      </div>
     </div>
   );
 }
